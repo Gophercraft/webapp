@@ -1,0 +1,16 @@
+.account-title {
+    font-family: "Friz Quadrata";
+    text-transform: uppercase;
+    color: rgb(255, 223, 116);
+    font-size: 16px;
+}
+
+.account-panel > * {
+    margin-top: 10px;
+    max-width: 95%;
+}
+.account-panel {
+    box-sizing: content-box;
+    padding: 15px;
+    margin-bottom: 15px;
+}

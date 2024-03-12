@@ -1,0 +1,2 @@
+npx prettier "src/**/*.tsx" --write
+npx prettier "src/**/*.ts" --write

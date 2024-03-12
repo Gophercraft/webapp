@@ -1,0 +1,23 @@
+.home-landing > * {
+    margin-top: 10px;
+    max-width: 95%;
+}
+.home-landing {
+    box-sizing: content-box;
+    padding: 15px;
+    margin-bottom: 15px;
+}
+
+.home-logo {
+    content: url("../image/gopher.png");
+    display: block;
+    margin: auto;
+}
+
+.home-title {
+    font-family: "Friz Quadrata";
+    text-align: center;
+    background: -webkit-linear-gradient(#eed323, #ff7300) transparent;
+	-webkit-background-clip: text;
+	-webkit-text-fill-color: transparent;
+}
