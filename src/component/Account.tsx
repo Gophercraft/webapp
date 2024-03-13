@@ -6,9 +6,9 @@ import '../style/account.css';
 
 export default function Account() {
   return (
-    <div className="card">
-      <div className="account-panel">
-        <h1 className="account-title">My Account</h1>
+    <div className='card'>
+      <div className='account-panel'>
+        <h1 className='account-title'>My Account</h1>
       </div>
     </div>
   );

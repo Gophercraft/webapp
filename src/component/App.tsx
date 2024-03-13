@@ -14,12 +14,12 @@ export default function App() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<NavBar />}>
+        <Route path='/' element={<NavBar />}>
           <Route index element={<Home />} />
-          <Route path="/register" element={<Register />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/logout" element={<Logout />} />
-          <Route path="/account" element={<Account />} />
+          <Route path='/register' element={<Register />} />
+          <Route path='/login' element={<Login />} />
+          <Route path='/logout' element={<Logout />} />
+          <Route path='/account' element={<Account />} />
         </Route>
       </Routes>
     </BrowserRouter>

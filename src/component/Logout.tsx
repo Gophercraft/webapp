@@ -16,11 +16,11 @@ export default function Logout() {
   };
 
   return (
-    <div className="card">
-      <div className="form-container">
+    <div className='card'>
+      <div className='form-container'>
         <button
-          id="logout-account-button"
-          className="form-button"
+          id='logout-account-button'
+          className='form-button'
           onClick={on_logout_click}
         >
           Log out

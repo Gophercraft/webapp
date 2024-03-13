@@ -76,11 +76,11 @@ export default function NavBar() {
 
   return (
     <>
-      <div className="nav-bar">
+      <div className='nav-bar'>
         {nav_list.map((nav_item) => {
           return (
             <Link
-              className="nav-elem"
+              className='nav-elem'
               data-active-page={location.pathname == nav_item.route}
               to={nav_item.route}
             >

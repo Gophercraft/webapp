@@ -169,14 +169,14 @@ export default class Register extends React.Component<
         return (
           <>
             <img
-              className="captcha"
+              className='captcha'
               src={`/api/v1/captcha/${this.state.captcha_id}`}
             />
             <input
-              className="text-input"
-              type="text"
-              id="register-captcha-solution"
-              placeholder="Solve the captcha"
+              className='text-input'
+              type='text'
+              id='register-captcha-solution'
+              placeholder='Solve the captcha'
               value={this.state.captcha_solution}
               onChange={this.on_captcha_solution_update.bind(this)}
             ></input>
@@ -188,7 +188,7 @@ export default class Register extends React.Component<
     const registration_error_message = () => {
       if (this.state.registration_error != '') {
         return (
-          <p className="form-error-message">{`${this.state.registration_error}`}</p>
+          <p className='form-error-message'>{`${this.state.registration_error}`}</p>
         );
       }
     };
@@ -199,19 +199,19 @@ export default class Register extends React.Component<
 
     const email_validation_message = () => {
       if (email_validation != '') {
-        return <p className="form-error-message">{email_validation}</p>;
+        return <p className='form-error-message'>{email_validation}</p>;
       }
     };
 
     const account_name_validation_message = () => {
       if (account_name_validation != '') {
-        return <p className="form-error-message">{account_name_validation}</p>;
+        return <p className='form-error-message'>{account_name_validation}</p>;
       }
     };
 
     const password_validation_message = () => {
       if (password_validation != '') {
-        return <p className="form-error-message">{password_validation}</p>;
+        return <p className='form-error-message'>{password_validation}</p>;
       }
     };
 
@@ -222,13 +222,13 @@ export default class Register extends React.Component<
     };
 
     return (
-      <div className="card">
-        <div className="form-container">
+      <div className='card'>
+        <div className='form-container'>
           <input
-            className="text-input"
-            id="register-email"
-            type="text"
-            placeholder="Email address (optional)"
+            className='text-input'
+            id='register-email'
+            type='text'
+            placeholder='Email address (optional)'
             maxLength={this.state.max_email_length}
             value={this.state.email}
             data-invalid-input={email_validation != ''}
@@ -236,9 +236,9 @@ export default class Register extends React.Component<
           />
           {email_validation_message()}
           <input
-            className="text-input"
-            id="register-account-name"
-            placeholder="Account name"
+            className='text-input'
+            id='register-account-name'
+            placeholder='Account name'
             maxLength={this.state.max_account_name_length}
             value={this.state.account_name}
             data-invalid-input={account_name_validation != ''}
@@ -246,10 +246,10 @@ export default class Register extends React.Component<
           />
           {account_name_validation_message()}
           <input
-            className="text-input"
-            type="password"
-            id="register-account-password"
-            placeholder="Password"
+            className='text-input'
+            type='password'
+            id='register-account-password'
+            placeholder='Password'
             maxLength={this.state.max_password_length}
             value={this.state.password}
             data-invalid-input={password_validation != ''}
@@ -258,8 +258,8 @@ export default class Register extends React.Component<
           {password_validation_message()}
           {captcha_form()}
           <button
-            id="register-account-button"
-            className="form-button"
+            id='register-account-button'
+            className='form-button'
             onClick={this.on_create_button_click.bind(this)}
           >
             Create account

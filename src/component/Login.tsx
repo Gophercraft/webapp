@@ -101,14 +101,14 @@ export default class Login extends React.Component<LoginProps, LoginState> {
         return (
           <>
             <img
-              className="captcha"
+              className='captcha'
               src={`/api/v1/captcha/${this.state.captcha_id}`}
             />
             <input
-              className="text-input"
-              type="text"
-              id="register-captcha-solution"
-              placeholder="Solve the captcha"
+              className='text-input'
+              type='text'
+              id='register-captcha-solution'
+              placeholder='Solve the captcha'
               value={this.state.captcha_solution}
               onChange={this.on_captcha_solution_update.bind(this)}
             ></input>
@@ -120,7 +120,7 @@ export default class Login extends React.Component<LoginProps, LoginState> {
     const login_error_message = () => {
       if (this.state.login_error != '') {
         return (
-          <p className="form-error-message">{`${this.state.login_error}`}</p>
+          <p className='form-error-message'>{`${this.state.login_error}`}</p>
         );
       }
     };
@@ -132,29 +132,29 @@ export default class Login extends React.Component<LoginProps, LoginState> {
     };
 
     return (
-      <div className="card">
-        <div className="form-container">
+      <div className='card'>
+        <div className='form-container'>
           <input
-            className="text-input"
-            id="login-account-name"
-            placeholder="Account name"
+            className='text-input'
+            id='login-account-name'
+            placeholder='Account name'
             maxLength={this.state.max_account_name_length}
             value={this.state.account_name}
             onChange={this.on_account_name_update.bind(this)}
           />
           <input
-            className="text-input"
-            type="password"
-            id="login-account-password"
-            placeholder="Password"
+            className='text-input'
+            type='password'
+            id='login-account-password'
+            placeholder='Password'
             maxLength={this.state.max_password_length}
             value={this.state.password}
             onChange={this.on_password_update.bind(this)}
           />
           {captcha_form()}
           <button
-            id="login-account-button"
-            className="form-button"
+            id='login-account-button'
+            className='form-button'
             onClick={this.on_login_button_click.bind(this)}
           >
             Log in
