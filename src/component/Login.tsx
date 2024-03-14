@@ -1,5 +1,5 @@
-import * as React from 'react';
-import { Navigate } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 import api from '../api';
 
@@ -7,163 +7,138 @@ import '../style/card.css';
 import '../style/captcha.css';
 import '../style/input.css';
 
-type LoginProps = {};
+export default function Login() {
+  const navigate = useNavigate();
 
-type LoginState = {
-  account_name: string;
-  password: string;
-  captcha_id: string;
-  captcha_solution: string;
-  max_account_name_length: number;
-  max_password_length: number;
-  logged_in: boolean;
-  has_login_challenge: boolean;
-  login_error: string;
-};
+  // State
 
-export default class Login extends React.Component<LoginProps, LoginState> {
-  state: LoginState = {
-    account_name: '',
-    password: '',
-    captcha_id: '',
-    captcha_solution: '',
-    max_account_name_length: 32,
-    max_password_length: 128,
-    logged_in: false,
-    login_error: '',
-    has_login_challenge: false
-  };
+  const [account_name, set_account_name] = useState('');
+  const [password, set_password] = useState('');
+  const [captcha_id, set_captcha_id] = useState('');
+  const [captcha_solution, set_captcha_solution] = useState('');
+  const [login_error, set_login_error] = useState('');
+  const [max_account_name_length] = useState(32);
+  const [max_password_length] = useState(128);
+  const [has_login_challenge, set_has_login_challenge] = useState(false);
 
-  async begin_login_challenge() {
+  const begin_login_challenge = async () => {
     try {
       const challenge = await api.Client.get_login_challenge();
-      this.setState({
-        has_login_challenge: true,
-        captcha_id: challenge.captcha_id
-      });
+
+      set_has_login_challenge(true);
+      set_captcha_id(challenge.captcha_id);
     } catch (err) {
-      this.setState({
-        login_error: `Cannot log in at this time, error contacting API: ${err}`
-      });
+      set_login_error(
+        `Cannot log in at this time, error contacting API: ${err}`
+      );
     }
-  }
+  };
 
-  login_failed(err: any) {
-    this.setState({
-      password: '',
-      login_error: err
-    });
+  useEffect(() => {
+    begin_login_challenge();
+  }, []);
 
-    this.begin_login_challenge();
-  }
+  // Handlers
 
-  on_account_name_update(event: React.ChangeEvent<HTMLInputElement>) {
-    this.setState({
-      account_name: event.target.value
-    });
-  }
+  const login_failed = (err: string) => {
+    set_password('');
+    set_captcha_solution('');
+    set_login_error(err);
+    begin_login_challenge();
+  };
 
-  on_password_update(event: React.ChangeEvent<HTMLInputElement>) {
-    this.setState({
-      password: event.target.value
-    });
-  }
+  const on_account_name_update = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    set_account_name(event.target.value);
+  };
 
-  on_captcha_solution_update(event: React.ChangeEvent<HTMLInputElement>) {
-    this.setState({
-      captcha_solution: event.target.value
-    });
-  }
+  const on_password_update = (event: React.ChangeEvent<HTMLInputElement>) => {
+    set_password(event.target.value);
+  };
 
-  componentDidMount() {
-    this.begin_login_challenge();
-  }
+  const on_captcha_solution_update = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    set_captcha_solution(event.target.value);
+  };
 
-  async on_login_button_click() {
+  const on_login_button_click = async () => {
+    if (!has_login_challenge) {
+      alert('Cannot log in at this time. Please try again later.');
+      return;
+    }
     try {
       await api.Client.login({
-        username: this.state.account_name,
-        password: this.state.password,
-        captcha_id: this.state.captcha_id,
-        captcha_solution: this.state.captcha_solution
+        username: account_name,
+        password: password,
+        captcha_id: captcha_id,
+        captcha_solution: captcha_solution
       });
-      this.setState({
-        logged_in: true
-      });
+      navigate('/account');
     } catch (err) {
-      this.login_failed(err);
+      login_failed(err);
     }
-  }
+  };
 
-  render() {
-    const captcha_form = () => {
-      if (this.state.captcha_id != '') {
-        return (
-          <>
-            <img
-              className='captcha'
-              src={`/api/v1/captcha/${this.state.captcha_id}`}
-            />
-            <input
-              className='text-input'
-              type='text'
-              id='register-captcha-solution'
-              placeholder='Solve the captcha'
-              value={this.state.captcha_solution}
-              onChange={this.on_captcha_solution_update.bind(this)}
-            ></input>
-          </>
-        );
-      }
-    };
-
-    const login_error_message = () => {
-      if (this.state.login_error != '') {
-        return (
-          <p className='form-error-message'>{`${this.state.login_error}`}</p>
-        );
-      }
-    };
-
-    const nav_after_login = () => {
-      if (this.state.logged_in) {
-        return <Navigate to={'/account'} />;
-      }
-    };
-
-    return (
-      <div className='card'>
-        <div className='form-container'>
-          <input
-            className='text-input'
-            id='login-account-name'
-            placeholder='Account name'
-            maxLength={this.state.max_account_name_length}
-            value={this.state.account_name}
-            onChange={this.on_account_name_update.bind(this)}
+  // Render
+  const captcha_form = () => {
+    if (captcha_id != '') {
+      return (
+        <>
+          <img
+            className='captcha'
+            src={api.Client.get_captcha_url(captcha_id)}
           />
           <input
             className='text-input'
-            type='password'
-            id='login-account-password'
-            placeholder='Password'
-            maxLength={this.state.max_password_length}
-            value={this.state.password}
-            onChange={this.on_password_update.bind(this)}
-          />
-          {captcha_form()}
-          <button
-            id='login-account-button'
-            className='form-button'
-            onClick={this.on_login_button_click.bind(this)}
-          >
-            Log in
-          </button>
-          {login_error_message()}
+            type='text'
+            id='register-captcha-solution'
+            placeholder='Solve the captcha'
+            value={captcha_solution}
+            onChange={on_captcha_solution_update}
+          ></input>
+        </>
+      );
+    }
+  };
 
-          {nav_after_login()}
-        </div>
+  const login_error_message = () => {
+    if (login_error != '') {
+      return <p className='form-error-message'>{login_error}</p>;
+    }
+  };
+
+  return (
+    <div className='card'>
+      <div className='form-container'>
+        <input
+          className='text-input'
+          id='login-account-name'
+          placeholder='Account name'
+          maxLength={max_account_name_length}
+          value={account_name}
+          onChange={on_account_name_update}
+        />
+        <input
+          className='text-input'
+          type='password'
+          id='login-account-password'
+          placeholder='Password'
+          maxLength={max_password_length}
+          value={password}
+          onChange={on_password_update}
+        />
+        {captcha_form()}
+        <button
+          id='login-account-button'
+          className='form-button'
+          onClick={on_login_button_click}
+        >
+          Log in
+        </button>
+        {login_error_message()}
       </div>
-    );
-  }
+    </div>
+  );
 }

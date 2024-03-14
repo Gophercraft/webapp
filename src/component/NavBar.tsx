@@ -1,5 +1,5 @@
 // Libraries
-import * as React from 'react';
+import React, { useEffect } from 'react';
 import { useState } from 'react';
 import { Outlet, Link, useLocation } from 'react-router-dom';
 

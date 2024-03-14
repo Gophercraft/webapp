@@ -30,6 +30,10 @@ class Client {
     return `${this.web_access_point}/api/v1/${method}`;
   }
 
+  static get_captcha_url(captcha_id: string): string {
+    return Client.get_url(`captcha/${captcha_id}`);
+  }
+
   static async request_json(
     method: string,
     url: string,
