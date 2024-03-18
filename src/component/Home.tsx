@@ -52,8 +52,8 @@ export default function Home() {
   };
 
   useEffect(() => {
-    const interval = setInterval(() =>  {
-        get_realm_status_list();
+    const interval = setInterval(() => {
+      get_realm_status_list();
     }, 3000);
 
     return () => clearInterval(interval);
