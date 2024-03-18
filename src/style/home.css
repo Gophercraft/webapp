@@ -1,23 +1,156 @@
 .home-landing > * {
-    margin-top: 10px;
-    max-width: 95%;
+  /* margin-top: 10px; */
+  /* max-width: 95%; */
 }
 .home-landing {
-    box-sizing: content-box;
-    padding: 15px;
-    margin-bottom: 15px;
+  box-sizing: content-box;
+  padding-top: 10px;
 }
 
 .home-logo {
-    content: url("../image/gopher.png");
-    display: block;
-    margin: auto;
+  content: url("../image/gopher.png");
+  display: block;
+  margin: auto;
 }
 
 .home-title {
-    font-family: "Friz Quadrata";
-    text-align: center;
-    background: -webkit-linear-gradient(#eed323, #ff7300) transparent;
-	-webkit-background-clip: text;
+  font-family: "Friz Quadrata";
+  text-align: center;
+  background: -webkit-linear-gradient(#eed323, #ff7300) transparent;
+  -webkit-background-clip: text;
 	-webkit-text-fill-color: transparent;
+}
+
+.realm-status-list {
+  box-sizing: content-box;
+  padding: 10px;
+  /* padding-top: 4px; */
+}
+
+.realm-status {
+  padding: 5px;
+  padding-bottom: 4px;
+
+  font-family: "Friz Quadrata";
+}
+
+.realm-status > * {
+  margin: 0;
+}
+
+.realm-status-title {
+  display: inline-block;
+}
+
+.realm-status-title > * {
+  display: inline-block;
+}
+
+.realm-status-name {
+  margin: 0px;
+  text-transform: uppercase;
+  letter-spacing: .2em;
+  color: rgb(140, 132, 118);
+  font-size: 16px;
+}
+
+.realm-status-description {
+  letter-spacing: .02em;
+  color: rgb(162, 137, 95);
+  font-size: 16px;
+}
+
+.realm-status-version {
+  margin-bottom: 0;
+}
+
+.realm-status-version > * {
+  display: inline-block;
+  margin-bottom: 0;
+}
+
+.realm-status-build {
+  letter-spacing: .2em;
+  color: rgb(110, 105, 96);
+  font-size: 12px;
+}
+
+.realm-status-expansion-icon {
+  max-height: 16px;
+  margin-left: 4px;
+  position: relative;
+  top: 3.5px;
+  justify-content: center;
+}
+
+.realm-status-expansion-icon-1 {
+  content: url('../image/expansion/1.png');
+}
+
+.realm-status-expansion-icon-2 {
+  content: url('../image/expansion/2.png');
+}
+
+.realm-status-expansion-icon-3 {
+  content: url('../image/expansion/3.png');
+}
+
+.realm-status-expansion-icon-4 {
+  content: url('../image/expansion/4.png');
+}
+
+.realm-status-expansion-icon-5 {
+  content: url('../image/expansion/5.png');
+}
+
+.realm-status-expansion-icon-6 {
+  content: url('../image/expansion/6.png');
+}
+
+.realm-status-expansion-icon-7 {
+  content: url('../image/expansion/7.png');
+}
+
+.realm-status-expansion-icon-8 {
+  content: url('../image/expansion/8.png');
+}
+
+.realm-status-expansion-icon-9 {
+  content: url('../image/expansion/9.png');
+}
+
+.realm-status-expansion-icon-10 {
+  content: url('../image/expansion/10.png');
+}
+
+.realm-connection-guide-link {
+  text-decoration: none;
+  cursor: pointer;
+  font-size: 10px;
+  color: #736b4c9c;
+}
+
+.realm-connection-guide-link:hover {
+  text-decoration: underline;
+}
+
+.realm-status-divider {
+  margin-left: 10px;
+  margin-right: 10px;
+  color: rgb(134, 88, 34);
+}
+
+.realm-status-availability-icon {
+  width: 25px;
+  height: 25px;
+  position: relative;
+  top: 7px;
+}
+
+.realm-status-availability-icon-online {
+  content: url('../image/server_online.png');
+}
+
+.realm-status-availability-icon-offline {
+  content: url('../image/server_offline.png');
 }

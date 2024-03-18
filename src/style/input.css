@@ -17,7 +17,7 @@
     box-shadow: inset 0 0 4px rgb(255, 136, 0);
     border-radius: 4px;
     padding: 10px;
-    box-sizing: border-box; 
+    box-sizing: border-box;
     max-width: 100%;
     width: 100%;
 }
@@ -80,3 +80,62 @@
     font-family: "Friz Quadrata";
     font-size: 10pt;
 }
+
+.action-button {
+  box-sizing: content-box;
+  font-family: "Friz Quadrata";
+  text-transform: uppercase;
+  letter-spacing: .2em;
+  display: block;
+  background-color: transparent;
+  color: #a58a57;
+  border: none;
+  box-shadow: inset 0 0 4px rgb(255, 136, 0);
+  border-radius: 4px;
+  padding: 10px;
+  max-width: 100%;
+}
+
+.action-button[data-action-enabled=true] {
+  box-shadow: inset 0 0 9px rgb(90, 138, 90);
+  border-radius: 3px;
+  color: rgb(90, 138, 90);
+}
+
+.action-button[data-action-enabled=true]:hover {
+  box-shadow: inset 0 0 9px rgb(21, 194, 21);
+  color: rgb(21, 194, 21);
+}
+
+.action-button:hover {
+  transition: 0.1s;
+  cursor: pointer;
+  outline: none;
+  box-shadow: inset 0 0 9px rgb(255, 223, 116);
+  border-radius: 4px;
+  color: rgb(255, 223, 116);
+  font-weight: 200;
+  border-radius: 4px;
+}
+
+.action-button:active {
+  transition: 0.1s;
+  cursor: pointer;
+  outline: none;
+  box-shadow: inset 0 0 9px rgb(231, 77, 30);
+  border-radius: 4px;
+  color: rgb(231, 77, 30);
+  font-weight: 200;
+  border-radius: 4px;
+}
+
+.action-button-destructive {
+  box-shadow: inset 0 0 4px rgb(231, 77, 30);
+  color: rgb(231, 77, 30);
+}
+
+.action-button-destructive:hover {
+  box-shadow: inset 0 0 9px rgb(255, 0, 0);
+  color: rgb(255, 0, 0);
+}
+

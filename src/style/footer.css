@@ -1,0 +1,38 @@
+.info-footer {
+  font-family: 'Friz Quadrata';
+  font-size: 12px;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  text-align: center;
+  margin-top: 14px;
+}
+
+.info-footer > * {
+  display: inline-block;
+  color: #736b4c9c;
+  margin-left: 2.5px;
+  margin-right: 2.5px;
+}
+
+.info-footer-project-link {
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.info-footer-project-link:hover {
+  text-decoration: underline;
+}
+
+/* .info-footer-project-link:visited {
+  text-decoration: none;
+}
+
+
+.info-footer-project-link:focus {
+  text-decoration: none;
+}
+
+.info-footer-project-link:hover, .info-footer-project-link:active {
+  text-decoration: none;
+} */

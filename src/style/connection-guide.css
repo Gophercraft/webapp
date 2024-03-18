@@ -1,0 +1,27 @@
+.connection-guide {
+  font-family: 'Friz Quadrata';
+  box-sizing: content-box;
+  padding: 10px;
+}
+
+.connection-guide-wtf {
+  font-family: 'Friz Quadrata';
+  background-color: rgb(46, 46, 41);
+  color: rgb(140, 132, 118);
+  width: 100%;
+  border-style: none;
+  border-color: Transparent;
+}
+
+.connection-guide-title {
+  text-transform: uppercase;
+  letter-spacing: .2em;
+  color: rgb(140, 132, 118);
+  font-size: 16px;
+}
+
+.connection-guide-text {
+  letter-spacing: .02em;
+  color: rgb(162, 137, 95);
+  font-size: 12px;
+}

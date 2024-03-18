@@ -1,16 +1,64 @@
 .account-title {
-    font-family: "Friz Quadrata";
-    text-transform: uppercase;
-    color: rgb(255, 223, 116);
-    font-size: 16px;
+  font-family: "Friz Quadrata";
+  text-transform: uppercase;
+  letter-spacing: .2em;
+  color: rgb(140, 132, 118);
+  font-size: 16px;
 }
 
-.account-panel > * {
-    margin-top: 10px;
-    max-width: 95%;
+.account-panel>* {
+  margin-top: 10px;
+  /* max-width: 95%; */
+  margin-left: auto;
+  margin-right: auto;
 }
+
 .account-panel {
-    box-sizing: content-box;
-    padding: 15px;
-    margin-bottom: 15px;
+  box-sizing: content-box;
+  padding: 15px;
+  padding-top: 4px;
+  /* margin-bottom: 15px; */
+}
+
+.account-property {
+  font-family: "Friz Quadrata";
+  display: block;
+}
+
+.account-property-name {
+  color: #a18755;
+}
+
+.account-property-value {
+  color: #a18755;
+  float: right;
+}
+
+.account-tier-normal {
+  color: #9c976c;
+}
+
+.account-tier-privileged {
+  color: #7aaca9;
+}
+
+.account-tier-game-master {
+  color: #086bbd;
+}
+
+.account-tier-moderator {
+  color: #d68100;
+}
+
+.account-tier-administrator {
+  color: #a82d79;
+}
+
+.game-account-buttons > button {
+  display: inline-block;
+  margin-right: 10px;
+}
+
+.game-account-activate-button {
+  margin-left: 0;
 }

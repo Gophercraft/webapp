@@ -1,6 +1,17 @@
+type VersionInfo = {
+  error_message?: string;
+  core_version?: string;
+  brand?: string;
+  project_url?: string;
+};
+
 type LoginChallenge = {
   error_message?: string;
   captcha_id?: string;
+};
+
+type ErrorResponse = {
+  error_message?: string;
 };
 
 type LoginRequest = {
@@ -46,7 +57,65 @@ type LogoutResponse = {
   error_message?: string;
 };
 
+type GameAccountStatus = {
+  name: string;
+  id: string;
+  active: boolean;
+  banned: boolean;
+  suspended: boolean;
+  unban_date: string;
+};
+
+type AccountStatus = {
+  error_message?: string;
+  username?: string;
+  account_id?: string;
+  account_tier?: string;
+  email?: string;
+  creation_date?: string;
+  locked?: boolean;
+  game_accounts?: GameAccountStatus[];
+};
+
+type NewGameAccountRequest = {
+  name: string;
+};
+
+type NewGameAccountResponse = {
+  error_message?: string;
+  id?: string;
+};
+
+type RenameGameAccountRequest = {
+  name: string;
+};
+
+type RealmStatus = {
+  id?: string;
+  name?: string;
+  description?: string;
+  build?: string;
+  expansion?: number;
+  online?: boolean;
+};
+
+type RealmStatusList = {
+  error_message?: string;
+  realms?: RealmStatus[];
+};
+
+interface AddressMap {
+  [key: string]: string;
+}
+
+type ServiceAddresses = {
+  error_message?: string;
+  addresses?: AddressMap;
+};
+
 export {
+  VersionInfo,
+  ErrorResponse,
   LoginChallenge,
   LoginRequest,
   LoginResponse,
@@ -54,5 +123,12 @@ export {
   RegistrationChallenge,
   RegistrationRequest,
   RegistrationResponse,
-  CredentialStatus
+  CredentialStatus,
+  AccountStatus,
+  GameAccountStatus,
+  NewGameAccountRequest,
+  NewGameAccountResponse,
+  RenameGameAccountRequest,
+  RealmStatusList,
+  ServiceAddresses
 };

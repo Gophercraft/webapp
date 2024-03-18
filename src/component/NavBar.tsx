@@ -1,11 +1,17 @@
 // Libraries
+
 import React, { useEffect } from 'react';
 import { useState } from 'react';
-import { Outlet, Link, useLocation } from 'react-router-dom';
+import { Outlet, Link, useLocation, useNavigate } from 'react-router-dom';
 
 import api from '../api';
 
+// Components
+
+import Footer from './Footer';
+
 // Styles
+
 import '../style/fonts.css';
 import '../style/nav.css';
 
@@ -52,23 +58,21 @@ const get_nav_list = (): NavBarItem[] => {
   ];
 };
 
-let checked_credential = false;
-
 export default function NavBar() {
   const [nav_list, set_nav_list] = useState(get_nav_list());
 
   const location = useLocation();
+  const navigate = useNavigate();
 
-  if (!checked_credential) {
+  useEffect(() => {
     api.Client.check_credential()
       .then(() => {
         set_nav_list(get_nav_list());
-        checked_credential = true;
       })
       .catch(() => {
-        checked_credential = true;
+        navigate('/');
       });
-  }
+  }, []);
 
   api.Client.on_state_change(() => {
     set_nav_list(get_nav_list());
@@ -90,6 +94,7 @@ export default function NavBar() {
         })}
       </div>
       <Outlet />
+      <Footer />
     </>
   );
 }

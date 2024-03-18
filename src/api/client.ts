@@ -1,4 +1,6 @@
 import {
+  VersionInfo,
+  ErrorResponse,
   LoginChallenge,
   LoginRequest,
   LoginResponse,
@@ -6,7 +8,13 @@ import {
   RegistrationChallenge,
   RegistrationRequest,
   RegistrationResponse,
-  CredentialStatus
+  CredentialStatus,
+  AccountStatus,
+  NewGameAccountRequest,
+  NewGameAccountResponse,
+  RenameGameAccountRequest,
+  RealmStatusList,
+  ServiceAddresses
 } from './models';
 
 enum ClientState {
@@ -21,6 +29,7 @@ class Client {
   static web_access_point: string;
   static web_token: string;
   static state_change_handlers: ClientStateChangeHandler[] = [];
+  static saved_version_info?: VersionInfo = null;
 
   static set_web_access_point(access_point: string) {
     Client.web_access_point = access_point;
@@ -56,7 +65,9 @@ class Client {
     }
 
     const response = await fetch(url, request_init);
-    if (response.status != 200) {
+    if (
+      response.headers.get('Content-Type') !== 'application/json; charset=utf-8'
+    ) {
       return new Promise((_, reject) => reject(response.statusText));
     }
 
@@ -64,6 +75,11 @@ class Client {
   }
 
   // Web APIs
+
+  static async get_service_addresses(): Promise<ServiceAddresses> {
+    const endpoints_url = Client.get_url('service_addresses');
+    return Client.request_json('GET', endpoints_url);
+  }
 
   static async get_registration_challenge(): Promise<RegistrationChallenge> {
     const register_url = Client.get_url('register');
@@ -75,6 +91,11 @@ class Client {
   ): Promise<LoginResponse> {
     const register_url = Client.get_url('register');
     return Client.request_json('POST', register_url, registration_request);
+  }
+
+  static async get_version_info(): Promise<VersionInfo> {
+    const version_url = Client.get_url('version');
+    return Client.request_json('GET', version_url);
   }
 
   static async get_login_challenge(): Promise<LoginChallenge> {
@@ -97,6 +118,53 @@ class Client {
   static async get_logout_request(): Promise<LogoutResponse> {
     const credential_url = Client.get_url('logout');
     return Client.request_json('GET', credential_url);
+  }
+
+  static async get_account_status(): Promise<AccountStatus> {
+    const account_url = Client.get_url('account');
+    return Client.request_json('GET', account_url);
+  }
+
+  static async put_new_game_account(
+    new_game_account_request: NewGameAccountRequest
+  ): Promise<NewGameAccountResponse> {
+    const new_game_account_url = Client.get_url('game_account');
+    return Client.request_json(
+      'PUT',
+      new_game_account_url,
+      new_game_account_request
+    );
+  }
+
+  static async post_activate_game_account(id: string): Promise<ErrorResponse> {
+    const activate_game_account_url = Client.get_url(
+      `game_account/${id}/activate`
+    );
+    return Client.request_json('POST', activate_game_account_url);
+  }
+
+  static async post_rename_game_account(
+    id: string,
+    rename_game_account_request: RenameGameAccountRequest
+  ): Promise<ErrorResponse> {
+    const activate_game_account_url = Client.get_url(
+      `game_account/${id}/rename`
+    );
+    return Client.request_json(
+      'POST',
+      activate_game_account_url,
+      rename_game_account_request
+    );
+  }
+
+  static async delete_delete_game_account(id: string): Promise<AccountStatus> {
+    const delete_game_account_url = Client.get_url(`game_account/${id}`);
+    return Client.request_json('DELETE', delete_game_account_url);
+  }
+
+  static async get_realm_status_list(): Promise<RealmStatusList> {
+    const realm_status_url = Client.get_url('realm/status');
+    return Client.request_json('GET', realm_status_url);
   }
 
   // Utilities (long term storage)
@@ -128,12 +196,32 @@ class Client {
     Client.remove_data('credential');
   }
 
+  static async version_info(): Promise<VersionInfo> {
+    if (Client.saved_version_info !== null) {
+      return new Promise((resolve) => resolve(Client.saved_version_info));
+    }
+    try {
+      const response = await Client.get_version_info();
+      if (typeof response.error_message == 'string') {
+        return new Promise((_, reject) => reject(response.error_message));
+      }
+      Client.saved_version_info = response;
+      return new Promise((resolve) => resolve(response));
+    } catch (err) {
+      return new Promise((_, reject) => reject(err));
+    }
+  }
+
   static async check_credential(): Promise<CredentialStatus> {
     if (!this.load_data('credential')) {
+      // Resolve if no credential is logged in
       return new Promise((resolve) => resolve({}));
     }
 
+    // Ask the server if our credential is valid
     try {
+      // If the server sends an error message with the response,
+      // it means an unrelated error occurred
       const credential_status = await Client.get_credential_status();
       if (typeof credential_status.error_message == 'string') {
         return new Promise((_, reject) =>
@@ -141,10 +229,15 @@ class Client {
         );
       }
 
+      // if the credential status is true
       if (credential_status.credential_is_valid) {
+        // Propagate to listeners that the client is authenticated
         Client.set_state(ClientState.CLIENT_AUTHENTICATED);
       } else {
+        // if the credential status is false,
+        // remove the credential
         Client.remove_credential();
+        // propagate logged out status to listeners
         Client.set_state(ClientState.CLIENT_UNAUTHENTICATED);
       }
     } catch (err) {
@@ -156,11 +249,14 @@ class Client {
     registration_request: RegistrationRequest
   ): Promise<RegistrationResponse> {
     try {
+      // Submit POST request to register API
       const response =
         await Client.post_registration_request(registration_request);
+      // Registration failed if error message is present
       if (typeof response.error_message == 'string') {
         return new Promise((_, reject) => reject(response.error_message));
       }
+      // Resolve
       return new Promise((resolve) => resolve(response));
     } catch (err) {
       return new Promise((_, reject) => reject(err));
@@ -169,16 +265,20 @@ class Client {
 
   static async login(login_request: LoginRequest): Promise<LoginResponse> {
     try {
+      // submit POST request to login API
       const response = await Client.post_login_request(login_request);
+      // Login failed if error message is present
       if (typeof response.error_message == 'string') {
         return new Promise((_, reject) => reject(response.error_message));
       }
+      // Save credential to localStorage
       Client.save_data('credential', {
         username: login_request.username,
         web_token: response.web_token
       });
+      // Propagate logged in state to listeners
       Client.set_state(ClientState.CLIENT_AUTHENTICATED);
-
+      // Success
       return new Promise((resolve) => resolve(response));
     } catch (err) {
       return new Promise((_, reject) => reject(err));
@@ -193,6 +293,100 @@ class Client {
       }
       Client.remove_credential();
       Client.set_state(ClientState.CLIENT_UNAUTHENTICATED);
+      return new Promise((resolve) => resolve(response));
+    } catch (err) {
+      return new Promise((_, reject) => reject(err));
+    }
+  }
+
+  static async check_account(): Promise<AccountStatus> {
+    try {
+      const response = await Client.get_account_status();
+      if (typeof response.error_message == 'string') {
+        return new Promise((_, reject) => reject(response.error_message));
+      }
+      return new Promise((resolve) => resolve(response));
+    } catch (err) {
+      return new Promise((_, reject) => reject(err));
+    }
+  }
+
+  static async new_game_account(
+    new_game_account_request: NewGameAccountRequest
+  ): Promise<NewGameAccountResponse> {
+    try {
+      const response = await Client.put_new_game_account(
+        new_game_account_request
+      );
+      if (typeof response.error_message == 'string') {
+        return new Promise((_, reject) => reject(response.error_message));
+      }
+      return new Promise((resolve) => resolve(response));
+    } catch (err) {
+      return new Promise((_, reject) => reject(err));
+    }
+  }
+
+  static async activate_game_account(id: string): Promise<ErrorResponse> {
+    try {
+      const response = await Client.post_activate_game_account(id);
+      if (typeof response.error_message == 'string') {
+        return new Promise((_, reject) => reject(response.error_message));
+      }
+      return new Promise((resolve) => resolve(response));
+    } catch (err) {
+      return new Promise((_, reject) => reject(err));
+    }
+  }
+
+  static async delete_game_account(id: string): Promise<ErrorResponse> {
+    try {
+      const response = await Client.delete_delete_game_account(id);
+      if (typeof response.error_message == 'string') {
+        return new Promise((_, reject) => reject(response.error_message));
+      }
+      return new Promise((resolve) => resolve(response));
+    } catch (err) {
+      return new Promise((_, reject) => reject(err));
+    }
+  }
+
+  static async rename_game_account(
+    id: string,
+    rename_game_account: RenameGameAccountRequest
+  ): Promise<ErrorResponse> {
+    try {
+      const response = await Client.post_rename_game_account(
+        id,
+        rename_game_account
+      );
+      if (typeof response.error_message == 'string') {
+        return new Promise((_, reject) => reject(response.error_message));
+      }
+      return new Promise((resolve) => resolve(response));
+    } catch (err) {
+      return new Promise((_, reject) => reject(err));
+    }
+  }
+
+  static async realm_status_list(): Promise<RealmStatusList> {
+    try {
+      const response = await Client.get_realm_status_list();
+      if (typeof response.error_message == 'string') {
+        return new Promise((_, reject) => reject(response.error_message));
+      }
+      return new Promise((resolve) => resolve(response));
+    } catch (err) {
+      return new Promise((_, reject) => reject(err));
+    }
+  }
+
+  static async service_addresses(): Promise<ServiceAddresses> {
+    try {
+      const response = await Client.get_service_addresses();
+      if (typeof response.error_message == 'string') {
+        return new Promise((_, reject) => reject(response.error_message));
+      }
       return new Promise((resolve) => resolve(response));
     } catch (err) {
       return new Promise((_, reject) => reject(err));

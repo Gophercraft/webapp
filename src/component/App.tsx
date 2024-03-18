@@ -9,6 +9,7 @@ import Login from './Login';
 import Logout from './Logout';
 import Register from './Register';
 import Account from './Account';
+import ConnectionGuide from './ConnectionGuide';
 
 export default function App() {
   return (
@@ -20,6 +21,10 @@ export default function App() {
           <Route path='/login' element={<Login />} />
           <Route path='/logout' element={<Logout />} />
           <Route path='/account' element={<Account />} />
+          <Route
+            path='/connection-guide/:version'
+            element={<ConnectionGuide />}
+          />
         </Route>
       </Routes>
     </BrowserRouter>
