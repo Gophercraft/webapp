@@ -13,6 +13,18 @@
   margin-right: auto;
 }
 
+.account-status-warning-message {
+  font-family: 'Friz Quadrata';
+  color: rgb(179, 79, 40);
+  max-width: 280px;
+}
+
+.account-status-error-message {
+  font-family: 'Friz Quadrata';
+  color: rgb(179, 79, 40);
+  max-width: 280px;
+}
+
 .account-panel {
   box-sizing: content-box;
   padding: 15px;
@@ -61,4 +73,12 @@
 
 .game-account-activate-button {
   margin-left: 0;
+}
+
+.account-blocked-no {
+  color: rgb(90, 138, 90);
+}
+
+.account-blocked-yes {
+  color: rgb(255, 0, 0);
 }

@@ -245,6 +245,18 @@ class Client {
     }
   }
 
+  static async registration_challenge(): Promise<RegistrationChallenge> {
+    try {
+      const response = await Client.get_registration_challenge();
+      if (typeof response.error_message == 'string') {
+        return new Promise((_, reject) => reject(response.error_message));
+      }
+      return new Promise((resolve) => resolve(response));
+    } catch (err) {
+      return new Promise((_, reject) => reject(err));
+    }
+  }
+
   static async register(
     registration_request: RegistrationRequest
   ): Promise<RegistrationResponse> {

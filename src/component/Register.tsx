@@ -28,16 +28,16 @@ export default function Register() {
 
   const begin_registration_challenge = async () => {
     try {
-      const challenge = await api.Client.get_registration_challenge();
+      const challenge = await api.Client.registration_challenge();
       set_has_registration_challenge(true);
       set_captcha_id(challenge.captcha_id);
       set_max_email_length(challenge.max_email_length);
       set_max_account_name_length(challenge.max_username_length);
       set_max_password_length(challenge.max_password_length);
     } catch (err) {
-      this.setState({
-        registration_error: `Cannot register at this time, error contacting API: ${err}`
-      });
+      set_registration_error(
+        `Cannot register at this time, error contacting API: ${err}`
+      );
     }
   };
 

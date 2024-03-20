@@ -60,10 +60,11 @@ type LogoutResponse = {
 type GameAccountStatus = {
   name: string;
   id: string;
+  characters: number;
   active: boolean;
   banned: boolean;
   suspended: boolean;
-  unban_date: string;
+  suspension_lift_date?: string;
 };
 
 type AccountStatus = {
@@ -74,6 +75,8 @@ type AccountStatus = {
   email?: string;
   creation_date?: string;
   locked?: boolean;
+  suspended?: boolean;
+  suspension_lift_date?: string;
   game_accounts?: GameAccountStatus[];
 };
 

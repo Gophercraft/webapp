@@ -13,6 +13,7 @@ import '../style/fonts.css';
 import '../style/account.css';
 import '../style/input.css';
 import { useNavigate } from 'react-router-dom';
+import { render } from 'react-dom';
 
 type AccountProperty = {
   name: string;
@@ -31,7 +32,8 @@ export default function Account() {
 
   const [account_title, set_account_title] = useState('');
   const [account_status, set_account_status] = useState<AccountStatus>({});
-  const [account_status_error, set_account_status_error] = useState('');
+  const [account_status_api_access_error, set_account_status_api_access_error] =
+    useState('');
 
   const get_account_status = async () => {
     try {
@@ -40,7 +42,7 @@ export default function Account() {
       set_account_status(response);
       set_account_title(`${response.username}#${response.account_id}`);
     } catch (err) {
-      set_account_status_error(err);
+      set_account_status_api_access_error(err);
     }
   };
 
@@ -79,9 +81,11 @@ export default function Account() {
   };
 
   const render_account_status_error_message = () => {
-    if (account_status_error != '') {
+    if (account_status_api_access_error != '') {
       return (
-        <p className='account-status-error-message'>{account_status_error}</p>
+        <p className='account-status-error-message'>
+          {account_status_api_access_error}
+        </p>
       );
     }
   };
@@ -95,7 +99,7 @@ export default function Account() {
     return date.toDateString();
   };
 
-  const account_properties: AccountProperty[] = [
+  let account_properties: AccountProperty[] = [
     {
       name: 'Email address',
       key: 'email',
@@ -119,10 +123,36 @@ export default function Account() {
       value: account_status.creation_date
         ? format_unix_time(account_status.creation_date)
         : 'never'
+    },
+
+    {
+      name: 'Locked',
+      key: 'locked',
+      value: account_status.locked ? 'yes' : 'no',
+      value_class: account_status.locked
+        ? 'account-blocked-yes'
+        : 'account-blocked-no'
+    },
+
+    {
+      name: 'Suspended',
+      key: 'suspended',
+      value: account_status.suspended ? 'yes' : 'no',
+      value_class: account_status.suspended
+        ? 'account-blocked-yes'
+        : 'account-blocked-no'
     }
   ];
 
-  const render_account_properties = () => {
+  if (account_status.suspended) {
+    account_properties.push({
+      name: 'Suspension will be lifted on',
+      key: 'suspension_lift_date',
+      value: format_unix_time(account_status.suspension_lift_date)
+    });
+  }
+
+  const render_account_properties = (account_properties: AccountProperty[]) => {
     return account_properties.map((account_property) => {
       let name_class = ['account-property-name'];
       let value_class = ['account-property-value'];
@@ -207,13 +237,74 @@ export default function Account() {
     };
   };
 
+  const render_game_accounts_status_error = () => {
+    let any_game_account_active = false;
+
+    if (typeof account_status.game_accounts === 'undefined') {
+      return;
+    }
+
+    for (let i = 0; i < account_status.game_accounts.length; i++) {
+      let game_account = account_status.game_accounts[i];
+      if (game_account.active) {
+        any_game_account_active = true;
+        break;
+      }
+    }
+
+    if (!any_game_account_active) {
+      return (
+        <p className='account-status-warning-message'>
+          Note that to connect to our server on an older client you may need to
+          have at least one (1) active game account.
+        </p>
+      );
+    }
+  };
+
   const render_game_account = (game_account: GameAccountStatus) => {
     const game_account_id = `${game_account.name}#${game_account.id}`;
+
+    let game_account_properties: AccountProperty[] = [
+      {
+        name: 'Characters',
+        key: 'characters',
+        value: `${game_account.characters}`
+      },
+
+      {
+        name: 'Banned',
+        key: 'banned',
+        value: game_account.banned ? 'yes' : 'no',
+        value_class: game_account.banned
+          ? 'account-blocked-yes'
+          : 'account-blocked-no'
+      },
+
+      {
+        name: 'Suspended',
+        key: 'suspended',
+        value: game_account.suspended ? 'yes' : 'no',
+        value_class: game_account.suspended
+          ? 'account-blocked-yes'
+          : 'account-blocked-no'
+      }
+    ];
+
+    if (game_account.suspended) {
+      game_account_properties.push({
+        name: 'Suspension will be lifted on',
+        key: 'suspension_lift_date',
+        value: format_unix_time(game_account.suspension_lift_date)
+      });
+    }
 
     return (
       <div className='card'>
         <div className='account-panel'>
           <h1 className='account-title'>{game_account_id}</h1>
+
+          {render_account_properties(game_account_properties)}
 
           <div className='game-account-buttons'>
             <button
@@ -272,8 +363,9 @@ export default function Account() {
       <div className='account-panel'>
         <h1 className='account-title'>{account_title}</h1>
         {render_account_status_error_message()}
-        {render_account_properties()}
+        {render_account_properties(account_properties)}
         <h1 className='account-title'>{`Game accounts (${account_status.game_accounts ? account_status.game_accounts.length : 0})`}</h1>
+        {render_game_accounts_status_error()}
         <button
           className='form-button'
           onClick={on_new_game_account_button_click}
