@@ -83,6 +83,10 @@
   justify-content: center;
 }
 
+.realm-status-expansion-icon-0 {
+  content: url('../image/expansion/0.png');
+}
+
 .realm-status-expansion-icon-1 {
   content: url('../image/expansion/1.png');
 }

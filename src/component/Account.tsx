@@ -5,6 +5,7 @@ import React, { useState, useEffect } from 'react';
 import api from '../api';
 
 import { AccountStatus, GameAccountStatus } from '../api/models';
+import * as time from '../util/time';
 
 // Styles
 
@@ -94,9 +95,7 @@ export default function Account() {
     if (unix_time == '') {
       return 'never';
     }
-    const unix_seconds = +unix_time;
-    const date = new Date(unix_seconds * 1000);
-    return date.toDateString();
+    return time.FormatSeconds(time.ParseSeconds(unix_time));
   };
 
   let account_properties: AccountProperty[] = [
