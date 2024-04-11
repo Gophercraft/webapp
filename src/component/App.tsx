@@ -10,6 +10,8 @@ import Logout from './Logout';
 import Register from './Register';
 import Account from './Account';
 import ConnectionGuide from './ConnectionGuide';
+import Authenticate from './Authenticate';
+import AuthenticatorSetup from './AuthenticatorSetup';
 
 export default function App() {
   return (
@@ -21,6 +23,8 @@ export default function App() {
           <Route path='/login' element={<Login />} />
           <Route path='/logout' element={<Logout />} />
           <Route path='/account' element={<Account />} />
+          <Route path='/authenticate' element={<Authenticate />} />
+          <Route path='/setup-authenticator' element={<AuthenticatorSetup />} />
           <Route
             path='/connection-guide/:version'
             element={<ConnectionGuide />}

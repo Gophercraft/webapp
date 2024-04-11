@@ -1,4 +1,3 @@
-
 //
 type Seconds = number;
 
@@ -20,9 +19,4 @@ function FormatSeconds(sec: Seconds): string {
   return date.toDateString();
 }
 
-export {
-  Seconds,
-
-  ParseSeconds,
-  FormatSeconds
-};
+export { Seconds, ParseSeconds, FormatSeconds };

@@ -14,7 +14,6 @@ import '../style/fonts.css';
 import '../style/account.css';
 import '../style/input.css';
 import { useNavigate } from 'react-router-dom';
-import { render } from 'react-dom';
 
 type AccountProperty = {
   name: string;
@@ -122,6 +121,15 @@ export default function Account() {
       value: account_status.creation_date
         ? format_unix_time(account_status.creation_date)
         : 'never'
+    },
+
+    {
+      name: 'Authenticator',
+      key: 'authenticator',
+      value: account_status.authenticator ? 'yes' : 'no',
+      value_class: account_status.authenticator
+        ? 'account-blocked-no'
+        : 'account-blocked-yes'
     },
 
     {
@@ -357,12 +365,22 @@ export default function Account() {
     }
   };
 
+  const on_authenticator_setup_click = () => {
+    navigate('/setup-authenticator');
+  }
+
   return (
     <div className='card'>
       <div className='account-panel'>
         <h1 className='account-title'>{account_title}</h1>
         {render_account_status_error_message()}
         {render_account_properties(account_properties)}
+        <button
+          className='form-button'
+          onClick={on_authenticator_setup_click}
+        >
+          Set up or reset Authenticator
+        </button>
         <h1 className='account-title'>{`Game accounts (${account_status.game_accounts ? account_status.game_accounts.length : 0})`}</h1>
         {render_game_accounts_status_error()}
         <button

@@ -14,7 +14,12 @@ import {
   NewGameAccountResponse,
   RenameGameAccountRequest,
   RealmStatusList,
-  ServiceAddresses
+  ServiceAddresses,
+  CredentialAuthenticationRequest,
+  CredentialAuthenticationResponse,
+  TwoFactorAuthenticationEnrollmentRequest,
+  TwoFactorAuthenticationEnrollmentResponse,
+  TwoFactorAuthenticationMethods
 } from './models';
 
 enum ClientState {
@@ -167,6 +172,29 @@ class Client {
     return Client.request_json('GET', realm_status_url);
   }
 
+  static async get_two_factor_authentication_methods(): Promise<TwoFactorAuthenticationMethods> {
+    const two_factor_authentication_methods_url = Client.get_url('2fa/methods');
+    return Client.request_json('GET', two_factor_authentication_methods_url);
+  }
+
+  static async post_authenticate_credential(
+    credential_authentication_request: CredentialAuthenticationRequest
+  ): Promise<CredentialAuthenticationResponse> {
+    const authenticate_credential_url = Client.get_url('2fa/authenticate');
+    return Client.request_json(
+      'POST',
+      authenticate_credential_url,
+      credential_authentication_request
+    );
+  }
+
+  static async post_enroll_2fa(
+    enrollment_request: TwoFactorAuthenticationEnrollmentRequest
+  ): Promise<TwoFactorAuthenticationEnrollmentResponse> {
+    const enroll_2fa_url = Client.get_url('2fa/enroll');
+    return Client.request_json('POST', enroll_2fa_url, enrollment_request);
+  }
+
   // Utilities (long term storage)
 
   static save_data(key: string, value: any) {
@@ -230,16 +258,20 @@ class Client {
       }
 
       // if the credential status is true
-      if (credential_status.credential_is_valid) {
+      if (credential_status.web_token_status == 'AUTHENTICATED') {
         // Propagate to listeners that the client is authenticated
         Client.set_state(ClientState.CLIENT_AUTHENTICATED);
       } else {
-        // if the credential status is false,
+        // if the credential status is logged out
         // remove the credential
-        Client.remove_credential();
+        if (credential_status.web_token_status == 'LOGGED_OUT') {
+          Client.remove_credential();
+        }
         // propagate logged out status to listeners
         Client.set_state(ClientState.CLIENT_UNAUTHENTICATED);
       }
+
+      return new Promise((resolve) => resolve(credential_status));
     } catch (err) {
       return new Promise((_, reject) => reject(err));
     }
@@ -288,8 +320,7 @@ class Client {
         username: login_request.username,
         web_token: response.web_token
       });
-      // Propagate logged in state to listeners
-      Client.set_state(ClientState.CLIENT_AUTHENTICATED);
+
       // Success
       return new Promise((resolve) => resolve(response));
     } catch (err) {
@@ -396,6 +427,48 @@ class Client {
   static async service_addresses(): Promise<ServiceAddresses> {
     try {
       const response = await Client.get_service_addresses();
+      if (typeof response.error_message == 'string') {
+        return new Promise((_, reject) => reject(response.error_message));
+      }
+      return new Promise((resolve) => resolve(response));
+    } catch (err) {
+      return new Promise((_, reject) => reject(err));
+    }
+  }
+
+  static async two_factor_authentication_methods(): Promise<TwoFactorAuthenticationMethods> {
+    try {
+      const response = await Client.get_two_factor_authentication_methods();
+      if (typeof response.error_message == 'string') {
+        return new Promise((_, reject) => reject(response.error_message));
+      }
+      return new Promise((resolve) => resolve(response));
+    } catch (err) {
+      return new Promise((_, reject) => reject(err));
+    }
+  }
+
+  static async authenticate_credential(
+    credential_authentication_request: CredentialAuthenticationRequest
+  ): Promise<CredentialAuthenticationResponse> {
+    try {
+      const response = await Client.post_authenticate_credential(
+        credential_authentication_request
+      );
+      if (typeof response.error_message == 'string') {
+        return new Promise((_, reject) => reject(response.error_message));
+      }
+      return new Promise((resolve) => resolve(response));
+    } catch (err) {
+      return new Promise((_, reject) => reject(err));
+    }
+  }
+
+  static async enroll_2fa(
+    enrollment_request: TwoFactorAuthenticationEnrollmentRequest
+  ): Promise<TwoFactorAuthenticationEnrollmentResponse> {
+    try {
+      const response = await Client.post_enroll_2fa(enrollment_request);
       if (typeof response.error_message == 'string') {
         return new Promise((_, reject) => reject(response.error_message));
       }

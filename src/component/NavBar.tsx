@@ -16,6 +16,7 @@ import '../style/fonts.css';
 import '../style/nav.css';
 
 type NavBarItem = {
+  key: string;
   route: string;
   name: string;
 };
@@ -24,16 +25,19 @@ const get_nav_list = (): NavBarItem[] => {
   if (api.Client.state == api.ClientState.CLIENT_UNAUTHENTICATED) {
     return [
       {
+        key: 'home',
         route: '/',
         name: 'Home'
       },
 
       {
+        key: 'register',
         route: '/register',
         name: 'Create Account'
       },
 
       {
+        key: 'login',
         route: '/login',
         name: 'Login'
       }
@@ -42,16 +46,19 @@ const get_nav_list = (): NavBarItem[] => {
 
   return [
     {
+      key: 'home',
       route: '/',
       name: 'Home'
     },
 
     {
+      key: 'account',
       route: '/account',
       name: 'Account'
     },
 
     {
+      key: 'logout',
       route: '/logout',
       name: 'Log out'
     }
@@ -84,6 +91,7 @@ export default function NavBar() {
         {nav_list.map((nav_item) => {
           return (
             <Link
+              key={nav_item.key}
               className='nav-elem'
               data-active-page={location.pathname == nav_item.route}
               to={nav_item.route}

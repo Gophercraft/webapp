@@ -1,0 +1,19 @@
+.authenticator-title {
+  font-family: "Friz Quadrata";
+  text-transform: uppercase;
+  letter-spacing: .2em;
+  color: rgb(140, 132, 118);
+  font-size: 16px;
+}
+
+.authenticator-help-text {
+  font-family: "Friz Quadrata";
+  color: rgb(189, 181, 168);
+  font-size: 12px;
+  max-width: 380px
+}
+
+.authenticator-setup-barcode-image {
+  display: block;
+  margin: auto;
+}

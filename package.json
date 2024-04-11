@@ -9,6 +9,7 @@
   "author": "Gophercraft Developers",
   "license": "GPL-3.0-only",
   "devDependencies": {
+    "@types/qrcode": "^1.5.5",
     "@types/react": "^18.2.64",
     "@types/react-dom": "^18.2.21",
     "css-loader": "^6.10.0",
@@ -22,6 +23,8 @@
     "typescript": "^5.4.2",
     "webpack": "^5.90.3",
     "webpack-cli": "^5.1.4",
-    "webpack-dev-server": "^5.0.2"
+    "webpack-dev-server": "^5.0.2",
+    "@niyari/base32-ts": "^0.0.4",
+    "qrcode": "^1.5.3"
   }
 }

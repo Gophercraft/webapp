@@ -51,6 +51,7 @@ type RegistrationResponse = {
 type CredentialStatus = {
   error_message?: string;
   credential_is_valid?: boolean;
+  web_token_status?: string;
 };
 
 type LogoutResponse = {
@@ -74,6 +75,9 @@ type AccountStatus = {
   account_tier?: string;
   email?: string;
   creation_date?: string;
+  email_verified?: boolean;
+  preferred_two_factor_authentication_method?: string;
+  authenticator?: boolean;
   locked?: boolean;
   suspended?: boolean;
   suspension_lift_date?: string;
@@ -116,6 +120,33 @@ type ServiceAddresses = {
   addresses?: AddressMap;
 };
 
+type CredentialAuthenticationRequest = {
+  error_message?: string;
+  two_factor_authentication_method?: string;
+  authenticator_password?: string;
+};
+
+type CredentialAuthenticationResponse = {
+  error_message?: string;
+  authenticated?: boolean;
+};
+
+type TwoFactorAuthenticationEnrollmentRequest = {
+  error_message?: string;
+  totp_secret?: string;
+  totp_password?: string;
+};
+
+type TwoFactorAuthenticationEnrollmentResponse = {
+  error_message?: string;
+  enrolled?: string;
+};
+
+type TwoFactorAuthenticationMethods = {
+  error_message?: string;
+  methods?: string[];
+};
+
 export {
   VersionInfo,
   ErrorResponse,
@@ -133,5 +164,10 @@ export {
   NewGameAccountResponse,
   RenameGameAccountRequest,
   RealmStatusList,
-  ServiceAddresses
+  ServiceAddresses,
+  CredentialAuthenticationRequest,
+  CredentialAuthenticationResponse,
+  TwoFactorAuthenticationEnrollmentRequest,
+  TwoFactorAuthenticationEnrollmentResponse,
+  TwoFactorAuthenticationMethods
 };

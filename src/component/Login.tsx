@@ -63,7 +63,7 @@ export default function Login() {
     set_captcha_solution(event.target.value);
   };
 
-  const on_login_button_click = async () => {
+  const do_login = async () => {
     if (!has_login_challenge) {
       alert('Cannot log in at this time. Please try again later.');
       return;
@@ -75,10 +75,27 @@ export default function Login() {
         captcha_id: captcha_id,
         captcha_solution: captcha_solution
       });
-      navigate('/account');
+      const credential_status = await api.Client.check_credential();
+      switch (credential_status.web_token_status) {
+        case 'AUTHENTICATED':
+          api.Client.set_state(api.ClientState.CLIENT_AUTHENTICATED);
+          navigate('/account');
+          break;
+        case 'AUTH_NEEDED':
+          navigate('/authenticate');
+          break;
+        default:
+          navigate('/');
+          break;
+      }
     } catch (err) {
+      console.log("err received", err);
       login_failed(err);
     }
+  }
+
+  const on_login_button_click = () => {
+    do_login();
   };
 
   // Render
