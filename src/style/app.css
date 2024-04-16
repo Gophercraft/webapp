@@ -9,3 +9,15 @@ body {
   margin-left: auto;
   margin-right: auto;
 }
+
+button:hover {
+  cursor: url('../image/cursor.png'), pointer;
+}
+
+button:active {
+  cursor: url('../image/cursor.png'), pointer;
+}
+
+a:hover {
+  cursor: url('../image/cursor.png'), pointer;
+}
