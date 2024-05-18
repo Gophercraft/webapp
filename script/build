@@ -1,3 +1,10 @@
 #!/usr/bin/env bash
-npx webpack build
-cp -r public ../gophercraft/home/webapp/public
+
+if ! [ -d ../core/home ]; then
+  echo "webapp repo should be in same parent directory as core repo to use this script."
+  exit 1
+fi
+
+npx webpack build --mode=production
+rm -rf ../core/home/webapp/public/*
+cp -r public ../core/home/webapp/public
