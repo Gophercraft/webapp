@@ -7,4 +7,4 @@ fi
 
 npx webpack build --mode=production
 rm -rf ../core/home/webapp/public/*
-cp -r public ../core/home/webapp/public
+cp -r public/* ../core/home/webapp/public/
